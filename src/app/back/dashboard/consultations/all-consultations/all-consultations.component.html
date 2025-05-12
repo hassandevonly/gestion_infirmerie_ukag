@@ -1,0 +1,175 @@
+<app-sidebar></app-sidebar>
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-12 connectedSortable">
+                <!-- Custom tabs (Charts with tabs)-->
+                <!-- /.card -->
+                <!-- Content Wrapper. Contains page content -->
+                <div class="wrapper">
+                    <!-- Content Header (Page header) -->
+                    <section class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                                <div class="col-sm-6">
+                                    <h1>Consultations</h1>
+
+                                </div>
+                                <div class="col-sm-6">
+                                    <h6 class="btn btn-primary btn-md float-sm-right">
+                                        <i class="fas fa-list">
+                                        </i>
+                                        <a href="dashboard/consultation/new-consultation"
+                                            style="color: white; font-size: 15px;font-weight: 600;"> Nouvelle
+                                            consultation</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div><!-- /.container-fluid -->
+                    </section>
+                    <section class="content">
+
+                        <!-- Default box -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Liste des consultations</h3>
+
+                                <div class="card-tools">
+                                    <div class="input-group input-group-sm" style="width: 150px;">
+                                        <input type="text" name="table_search" class="form-control float-right"
+                                            placeholder="Recherche" [(ngModel)]="searchTerm"
+                                            (input)="filterConsultations()">
+
+                                        <div class="input-group-append">
+                                            <button type="submit" class="btn btn-default">
+                                                <i class="fas fa-search"></i>
+                                            </button>
+                                        </div>
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table" *ngIf="consultations$ | async as consultations; else noData">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 1%">
+                                                #
+                                            </th>
+                                            <th style="width: 20%">
+                                                Nom Complet
+                                            </th>
+                                            <th style="width: 15%">
+                                                Matricule
+                                            </th>
+                                            <th style="width: 15%">
+                                                Contact
+                                            </th>
+                                            <th style="width: 15%">
+                                                Motif
+                                            </th>
+                                            <th>
+                                                Prescription
+                                            </th>
+                                            <th style="width: 8%" class="text-center">
+                                                Date de consultation
+                                            </th>
+                                            <th style="width: 20%" class="text-center">
+                                                Actions
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let consult of filteredData">
+                                            <td>
+                                                #
+                                            </td>
+                                            <td>
+                                                <strong>
+                                                    {{consult.nom}} {{consult.prenom}}
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                {{consult.matricule}}
+                                            </td>
+                                            <td class="project_progress">
+                                                <!-- <div class="progress progress-sm">
+                                                    <div class="progress-bar bg-green" role="progressbar"
+                                                        aria-valuenow="57" aria-valuemin="0" aria-valuemax="100"
+                                                        style="width: 57%">
+                                                    </div>
+                                                </div>
+                                                <small>
+                                                    57% Complete
+                                                </small> -->
+                                                {{consult.telephone}}
+                                            </td>
+                                            <td class="project-state">
+                                                <strong>
+                                                    {{consult.motif}}
+                                                </strong>
+                                            </td>
+                                            <td class="project-state">
+                                                <strong>
+                                                    {{consult.traitement}}
+                                                </strong>
+                                            </td>
+                                            <td class="project-state">
+                                                <strong>
+                                                    {{consult.dateConsultation}}
+                                                </strong>
+                                            </td>
+                                            <td class=" text-right">
+                                                <button class="btn btn-primary btn-md"
+                                                    (click)="viewConsultation(consult)">
+                                                    <i class="fas fa-eye">
+                                                    </i>
+
+                                                </button>
+                                                <button class="btn btn-clear btn-sm">
+
+                                                </button>
+                                                <button class="btn btn-warning btn-md"
+                                                    >
+                                                    <i class="fas fa-print">
+                                                    </i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <ng-template #noData>
+                                    <p>Aucune consultation trouvée.</p>
+                                </ng-template>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+
+                <!-- /.card -->
+            </section>
+            <!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <!-- <section class="col-lg-5 connectedSortable">
+                
+            </section> -->
+            <!-- right col -->
+        </div>
+    </section>
+    <!-- /.content -->
+    <br><br><br>
+</div>
+<!-- /.content-wrapper -->
+
+<app-footer></app-footer>

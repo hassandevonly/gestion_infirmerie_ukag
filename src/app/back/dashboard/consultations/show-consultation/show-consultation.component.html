@@ -1,0 +1,107 @@
+<app-sidebar></app-sidebar>
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-12 connectedSortable">
+                <!-- Custom tabs (Charts with tabs)-->
+                <!-- /.card -->
+                <!-- Content Wrapper. Contains page content -->
+                <div class="wrapper">
+                    <!-- Content Header (Page header) -->
+                    <section class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                                <div class="col-sm-6">
+                                    <h1>Consultations</h1>
+                                </div>
+                                <div class="col-sm-6">
+                                    <h6 class="btn btn-primary btn-md float-sm-right">
+                                        <i class="fas fa-list"></i>
+                                        <a href="dashboard/consultation/new-consultation"
+                                            style="color: white; font-size: 15px;font-weight: 600;"> Nouvelle
+                                            consultation</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div><!-- /.container-fluid -->
+                    </section>
+                    <section class="content">
+                        <!-- Default box -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h3 class="card-title">Detail de la consultation</h3>
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                        title="Collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-tool" data-card-widget="remove" title="Remove">
+                                        <i class="fas fa-times"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body table-responsive p-0" style="height: 300px;">
+                                <table class="table table-head-fixed text-nowrap" *ngIf="realtimeData as consultation">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 1%">#</th>
+                                            <th style="width: 20%">Nom Complet</th>
+                                            <th>Sexe</th>
+                                            <th>Age</th>
+                                            <th>Matricule</th>
+                                            <th>Contact</th>
+                                            <th>Motif</th>
+                                            <th style="width: 15%">Diagnostic</th>
+                                            <th>Prescription</th>
+                                            <th>Quantité</th>
+                                            <th>Nom du Médecin</th>
+                                            <th>Contact du Médecin</th>
+                                            <th>Email du Médecin</th>
+                                            <th style="width: 8%" class="text-center">Date et Heure de consultation</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>#</td>
+                                            <td><strong>{{ consultation.nom }} {{ consultation.prenom }}</strong></td>
+                                            <td>{{ consultation.sexe }}</td>
+                                            <td class="project_progress">{{ consultation.age }} ans</td>
+                                            <td>{{ consultation.matricule }}</td>
+                                            <td>{{ consultation.telephone }}</td>
+                                            <td class="project-state"><strong>{{ consultation.motif }}</strong></td>
+                                            <td>{{ consultation.diagnostic }}</td>
+                                            <td class="project-state"><strong>{{ consultation.traitement }}</strong></td>
+                                            <td class="project-state"><strong>{{ consultation.quantite }}</strong></td>
+                                            <td class="project-state"><strong>{{ consultation.nom_medecin }}</strong></td>
+                                            <td class="project-state"><strong>{{ consultation.contact }}</strong></td>
+                                            <td class="project-state"><strong>{{ consultation.email }}</strong></td>
+                                            <td class="project-state"><strong>{{ consultation.dateConsultation }}</strong></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- /.card-body -->
+                        </div>
+                        <!-- /.card -->
+
+                        
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+                <!-- /.card -->
+            </section>
+            <!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <!-- <section class="col-lg-5 connectedSortable"></section> -->
+            <!-- right col -->
+        </div>
+    </section>
+    <!-- /.content -->
+    <br><br><br>
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer>
+

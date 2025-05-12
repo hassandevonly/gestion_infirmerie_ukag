@@ -1,0 +1,20 @@
+export interface Consultations {
+    id?: string,
+    nom: string,
+    prenom: string,
+    matricule: string,
+    age: number,
+    typePatient: string,
+    sexe: string,
+    telephone: string,
+    motif: string,
+    dateConsultation: string,
+    heureConsultation: string, 
+    diagnostic: string,
+    traitement: string,
+    praticien: string,
+    quantite: string,
+    nom_medecin?: string,
+    contact?: string,
+    email?: string 
+}

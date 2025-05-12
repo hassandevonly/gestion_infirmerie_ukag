@@ -1,0 +1,198 @@
+<app-sidebar></app-sidebar>
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <!-- Left col -->
+            <section class="col-lg-12 connectedSortable">
+                <!-- Custom tabs (Charts with tabs)-->
+                <!-- /.card -->
+                <!-- Content Wrapper. Contains page content -->
+                <div class="wrapper">
+                    <!-- Content Header (Page header) -->
+                    <section class="content-header">
+                        <div class="container-fluid">
+                            <div class="row mb-2">
+                                <div class="col-sm-6">
+                                    <h1>Liste des medicaments</h1>
+
+                                </div>
+                                <div class="col-sm-6">
+
+                                    <h6 class="btn btn-primary btn-md float-sm-right" *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
+                                        <i class="fas fa-list">
+                                        </i>
+                                        <a href="dashboard/medicaments/new-medicament"
+                                            style="color: white; font-size: 15px;font-weight: 600;" > Ajouter un
+                                            medicament</a>
+                                    </h6>
+                                </div>
+                            </div>
+                        </div><!-- /.container-fluid -->
+                    </section>
+                    <section class="content">
+
+                        <!-- Default box -->
+                        <!-- /.card -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <h3 class="card-title">Liste des consultations</h3>
+
+
+                                        
+                                    </div>
+                                    <!-- /.card-header -->
+                                    <div class="card-body table-responsive p-0" style="height: 300px;">
+                                        <table class="table table-head-fixed text-nowrap" *ngIf="realtimeData as medoc">
+                                            <thead>
+                                                <tr>
+                                                    <th style="width: 1%">
+                                                        #
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Nom Commercial
+                                                    </th>
+                                                    <th style="width: 20%">
+                                                        Nom Générique
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Catégorie
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Forme
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Dosage
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Quantité totale
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Seuil Minimum
+                                                    </th>
+                                                    <th>
+                                                        Date Peremption
+                                                    </th>
+                                                    <th style="width: 8%" class="text-center">
+                                                        Date d'entrée en stock
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Nom Fournisseur
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Contact Fournisseur
+                                                    </th>
+                                                    <th style="width: 15%">
+                                                        Email Fournisseur
+                                                    <th style="width: 20%" class="text-center" *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
+                                                        Actions
+                                                    </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        #
+                                                    </td>
+                                                    <td>
+                                                        <strong>
+                                                            {{ medoc.nom_commercial }}
+                                                        </strong>
+                                                    </td>
+                                                    <td>
+                                                        {{ medoc.nom_generique }}
+                                                    </td>
+                                                    <td>
+                                                        {{ medoc.categorie }}
+                                                    </td>
+                                                    <td>
+                                                        {{ medoc.forme }}
+                                                    </td>
+                                                    <td>
+                                                        {{ medoc.dosage }}
+                                                    </td>
+
+                                                    <td class="project_progress">
+                                                        <div class="progress progress-sm">
+                                                            <div class="progress-bar bg-green" role="progressbar"
+                                                                aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"
+                                                                [style.width.%]="medoc.quantite_dispo">
+                                                            </div>
+                                                        </div>
+                                                        <small>
+                                                           {{medoc.quantite_dispo}} en stock
+                                                        </small>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.seuil_minimum}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.date_peremption}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.date_entree_stock | date: 'dd/MM/yyyy HH:mm'}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.nom_fournisseur}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.contact}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class="project-state">
+                                                        <strong>
+                                                            {{medoc.adresse_email}}
+                                                        </strong>
+                                                    </td>
+                                                    <td class=" text-right" *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
+                                                        <button class="btn btn-info btn-sm" >
+                                                            <i class="fas fa-pencil-alt">
+                                                            </i>     
+                                                        </button> 
+                                                        <button class="btn btn-danger btn-sm">
+                                                            <i class="fas fa-trash">
+                                                            </i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <!-- /.card-body -->
+                                </div>
+                                <!-- /.card -->
+                            </div>
+                        </div>
+
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+
+                <!-- /.card -->
+            </section>
+            <!-- /.Left col -->
+            <!-- right col (We are only adding the ID to make the widgets sortable)-->
+            <!-- <section class="col-lg-5 connectedSortable">
+                
+            </section> -->
+            <!-- right col -->
+        </div>
+    </section>
+    <!-- /.content -->
+    <br><br><br>
+</div>
+<!-- /.content-wrapper -->
+
+<app-footer></app-footer>
