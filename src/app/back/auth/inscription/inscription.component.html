@@ -1,0 +1,104 @@
+<div class="hold-transition register-page">
+    <br><br><br><br><br><br><br><br>
+    <div class="register-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="../../index2.html" class="h1"><b>Infirmerie</b> UKAG</a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">Création de compte</p>
+
+                <form [formGroup]="inscriptionForm" (ngSubmit)="onSubmit()">
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" formControlName="nom" placeholder="Donnez le nom">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" formControlName="prenom" placeholder="Donnez le prenom">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-user"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" formControlName="email" placeholder="L'adresse email">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="tel" class="form-control" formControlName="contact" placeholder="Le numero de téléphone">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-phone"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select formControlName="genre" class="form-control">
+                            <option value="" disabled>Choisissez le genre</option>
+                            <option value="Homme">Homme</option>
+                            <option value="Femme">Femme</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" formControlName="password" placeholder="Donnez le mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" formControlName="confirmPassword" placeholder="Confirmer le mot de passe">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <select id="inputStatus" formControlName="genre" formControlName="typeCompte" class="form-control">
+                            <option value="" disabled>Choisissez le type de compte</option>
+                            <option>Medecin</option>
+                            <option>Logistique</option>
+                            <option>Gestionnaire</option>
+                        </select>
+                    </div>
+                    <div class="row">
+                        <div class="col-6">
+
+                        </div>
+                        <!-- /.col -->
+                        <div class="col-6">
+                            <button type="submit" class="btn btn-primary btn-block">
+                                Enregistrer</button>
+                        </div>
+                        <!-- /.col -->
+                    </div>
+                </form>
+
+                <!-- <div class="social-auth-links text-center">
+                    <a href="#" class="btn btn-block btn-primary">
+                        <i class="fab fa-facebook mr-2"></i>
+                        Sign up using Facebook
+                    </a>
+                    <a href="#" class="btn btn-block btn-danger">
+                        <i class="fab fa-google-plus mr-2"></i>
+                        Sign up using Google+
+                    </a>
+                </div> -->
+                <br><br>
+                <a href="/login" class="text-center">J'ai déja un compte</a>
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
+    </div>
+</div>

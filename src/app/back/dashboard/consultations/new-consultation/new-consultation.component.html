@@ -1,0 +1,148 @@
+<app-sidebar></app-sidebar>
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Nouvelle Consultation</h1>
+
+                </div>
+                <div class="col-sm-6">
+                    <h6 class="btn btn-warning btn-md float-sm-right">
+                        <i class="fas fa-list">
+                        </i>
+                        <a href="dashboard/consultation/all-consultation"
+                            style="color: black; font-size: 15px;font-weight: 600;"> Liste des consultations</a>
+                    </h6>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+
+    <!-- Main content -->
+    <section class="content">
+        <form [formGroup]="consultForm" (ngSubmit)="onSubmit()">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h3 class="card-title">Informations générales du patient</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="inputName">Nom</label>
+                                <input type="text" id="inputName" formControlName="nom" class="form-control">
+                            </div>
+                            <!-- <div class="form-group">
+                <label for="inputDescription">Prénom</label>
+                <textarea id="inputDescription" class="form-control" rows="4"></textarea>
+              </div> -->
+
+                            <div class="form-group">
+                                <label for="inputClientCompany">Prénom</label>
+                                <input type="text" id="inputClientCompany" formControlName="prenom"
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus">Genre</label>
+                                <select id="inputStatus" formControlName="genre" class="form-control custom-select">
+                                    <option value="" disabled>Choisissez le sexe</option>
+                                    <option>Homme</option>
+                                    <option>Femme</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputProjectLeader">Age</label>
+                                <input type="number" id="inputProjectLeader" formControlName="age" [min]="1" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus">Type de patient</label>
+                                <select id="inputStatus" formControlName="typePatient" class="form-control custom-select">
+                                    <option value="" disabled>Choisissez le type de patient</option>
+                                    <option>Etudiant</option>
+                                    <option>Enseignant</option>
+                                    <option>Personnel</option>
+                                    <option>Autres</option>
+                                </select>
+                            </div>
+                            <div class="form-group" *ngIf="consultForm.get('typePatient')?.value !== 'Enseignant' && consultForm.get('typePatient')?.value !== 'Personnel' && consultForm.get('typePatient')?.value !== 'Autres'">
+                                <label for="inputProjectLeader">Matricule</label>
+                                <input type="text" id="inputProjectLeader" formControlName="matricule"
+                                    class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputProjectLeader">Contact</label>
+                                <input type="text" id="inputProjectLeader" formControlName="contact"
+                                    class="form-control">
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+                <div class="col-md-6">
+                    <div class="card card-danger">
+                        <div class="card-header">
+                            <h3 class="card-title">Détails de la consultation</h3>
+
+                            <div class="card-tools">
+                                <button type="button" class="btn btn-tool" data-card-widget="collapse" title="Collapse">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="inputName">Motif de la consultation</label>
+                                <input type="text" id="inputName" formControlName="motif" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputName">Diagnostic Etabli</label>
+                                <input type="text" id="inputName" formControlName="diagnostic" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus">Médicament prescrit</label>
+                                <select id="inputStatus" multiple formControlName="traitement" class="form-control custom-select">
+                                    <option value="" disabled>Choisissez le medicament</option>
+                                    <option *ngFor="let medoc of filteredData">{{medoc.nom_commercial}}</option>
+                                    <option>Aucune prescription</option>
+                                </select>
+                            </div>
+                            <div class="form-group" *ngIf="consultForm.get('traitement')?.value !== 'Aucune prescription'">
+                                <label for="inputProjectLeader">Quantité</label>
+                                <input type="number" id="inputProjectLeader" [min]="1" formControlName="quantite" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="inputStatus">Praticien</label>
+                                <select id="inputStatus" formControlName="praticien" class="form-control custom-select">
+                                    <option value="" disabled>Choisissez le praticien</option>
+                                    <option *ngFor="let data of medecins">{{data.nom}} {{data.prenom}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- /.card-body -->
+                    </div>
+                    <!-- /.card -->
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <a class="btn btn-danger btn-lg" (click)="formReset()">Annulé</a>
+                    <button type="submit" [disabled]="consultForm.invalid" class="btn btn-success btn-lg float-right">Valider</button>
+                </div>
+            </div>
+        </form>
+        <br><br>
+    </section>
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+<app-footer></app-footer>
