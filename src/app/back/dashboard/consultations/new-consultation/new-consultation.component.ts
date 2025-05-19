@@ -10,6 +10,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 import { ConsultationsService } from 'src/app/services/consultation/consultations.service';
 import { ConsultationService } from 'src/app/services/consultation/realtime/consultation.service';
 import { MedicamentsService } from 'src/app/services/medicaments/medicaments.service';
+import { UtilisateursService } from 'src/app/services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-new-consultation',
@@ -27,6 +28,8 @@ export class NewConsultationComponent {
   searchTerm: string = '';
   totalData = 0
   consultations: Medicaments[] = [];
+  medecins: Utilisateurs[] = [];
+
 
 
   constructor(
@@ -37,13 +40,15 @@ export class NewConsultationComponent {
     private router: ActivatedRoute,
     private authService: AuthService,
     private realMedicament: MedicamentsService,
+    private usersService: UtilisateursService
+
   ) {
     this.consultForm = this.fb.group({
       nom: ['', Validators.required], // Champ obligatoire
       prenom: ['', Validators.required], // Valeur par défaut: aujourd'hui
       genre: ['', Validators.required],
       age: ['', Validators.required],
-      typePatient : ['', Validators.required],
+      typePatient: ['', Validators.required],
       contact: ['', Validators.required],
       motif: ['', Validators.required],
       diagnostic: ['', Validators.required],
@@ -83,6 +88,11 @@ export class NewConsultationComponent {
     // this.initForm(); // Initialisation du formulaire
     this.getAllConsultation();
     this.getAllMedicaments();
+    this.usersService.getUtilisateursMedecins().subscribe(data => {
+      this.medecins = data;
+      console.log("Voici les comptes medecin : " + this.medecins);
+
+    });
   }
 
   getAllConsultation() {
@@ -122,17 +132,17 @@ export class NewConsultationComponent {
         email: this.userData?.email
 
       };
-      
-      if(this.consultForm.value.traitement == "Aucune prescription"){
+
+      if (this.consultForm.value.traitement == "Aucune prescription") {
         newConsultation.quantite = '0';
 
       }
-      if(this.consultForm.value.typePatient == "Enseignant" || this.consultForm.value.typePatient == "Personnel" || this.consultForm.value.typePatient == "Autres"){
+      if (this.consultForm.value.typePatient == "Enseignant" || this.consultForm.value.typePatient == "Personnel" || this.consultForm.value.typePatient == "Autres") {
         newConsultation.matricule = ""
       }
 
       console.log("Consultation soumise : ", newConsultation);
-      
+
 
       this.realConsult.addConsultation(newConsultation)
         .then(() => {

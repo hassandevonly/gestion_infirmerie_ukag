@@ -256,28 +256,29 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="inputName">Nom commercial</label>
-                                <input type="text" id="inputName" formControlName="nom_commercial" class="form-control">
+                                <label for="inputName">Nom Produit</label>
+                                <input type="text" id="inputName" formControlName="nom_produit" class="form-control">
                             </div>
                             <!-- <div class="form-group">
                 <label for="inputDescription">Prénom</label>
                 <textarea id="inputDescription" class="form-control" rows="4"></textarea>
               </div> -->
 
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label for="inputClientCompany">Nom Générique</label>
-                                <input type="text" id="inputClientCompany" formControlName="nom_generique"
+                                <input type="text" id="inputClientCompany" formControlName="dosage"
                                     class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <label for="inputStatus">Catégorie</label>
-                                <select id="inputStatus" formControlName="categorie" class="form-control custom-select">
-                                    <option selected disabled>Choisissez la Catégorie</option>
-                                    <option>Antibiotique</option>
-                                    <option>Analgésique</option>
+                            </div> -->
+                            <!-- <div class="form-group">
+                                <label for="inputStatus">Dosage</label>
+                                <select id="inputStatus" formControlName="dosage" class="form-control custom-select">
+                                    <option selected disabled>Choisissez le dosage</option>
+                                    <option>250 mg</option>
+                                    <option>500 mg</option>
+                                    <option>1000 mg</option>
                                 </select>
-                            </div>
-                            <div class="form-group">
+                            </div> -->
+                            <!-- <div class="form-group">
                                 <label for="inputStatus">Forme</label>
                                 <select id="inputStatus" formControlName="forme" class="form-control custom-select">
                                     <option selected disabled>Choisissez la forme</option>
@@ -285,7 +286,7 @@
                                     <option>Comprimé</option>
                                     <option>Injection</option>
                                 </select>
-                            </div>
+                            </div> -->
                             <div class="form-group">
                                 <label for="inputStatus">Dosage</label>
                                 <select id="inputStatus" formControlName="dosage" class="form-control custom-select">
@@ -313,16 +314,19 @@
                         </div>
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="inputName">Quantité disponible</label>
-                                <input type="number" id="inputName" formControlName="quantite_dispo" class="form-control">
+                                <label for="inputName">Quantité total</label>
+                                <input type="number" id="inputName" formControlName="quantite_total"
+                                    class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="inputName">Seuil Minimum</label>
-                                <input type="number" id="inputName" formControlName="seuil_minimum" class="form-control">
+                                <input type="number" id="inputName" formControlName="seuil_minimum"
+                                    class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="inputName">Date de péremption</label>
-                                <input type="date" id="inputName" formControlName="date_peremption" class="form-control">
+                                <input type="date" id="inputName" formControlName="date_peremption"
+                                    class="form-control">
                             </div>
                         </div>
                         <!-- /.card-body -->
@@ -333,7 +337,8 @@
             <div class="row">
                 <div class="col-12">
                     <a class="btn btn-danger btn-lg">Annulé</a>
-                    <button type="submit" [disabled]="medocForm.invalid" class="btn btn-success btn-lg float-right">Valider</button>
+                    <button type="submit" [disabled]="medocForm.invalid"
+                        class="btn btn-success btn-lg float-right">Valider</button>
                 </div>
             </div>
         </form>

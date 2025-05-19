@@ -110,7 +110,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="inputStatus">Médicament prescrit</label>
-                                <select id="inputStatus" formControlName="traitement" class="form-control custom-select">
+                                <select id="inputStatus" multiple formControlName="traitement" class="form-control custom-select">
                                     <option value="" disabled>Choisissez le medicament</option>
                                     <option *ngFor="let medoc of filteredData">{{medoc.nom_commercial}}</option>
                                     <option>Aucune prescription</option>
@@ -124,9 +124,7 @@
                                 <label for="inputStatus">Praticien</label>
                                 <select id="inputStatus" formControlName="praticien" class="form-control custom-select">
                                     <option value="" disabled>Choisissez le praticien</option>
-                                    <option>Medecin 1</option>
-                                    <option>Medecin 2</option>
-                                    <option>Medecin 3</option>
+                                    <option *ngFor="let data of medecins">{{data.nom}} {{data.prenom}}</option>
                                 </select>
                             </div>
                         </div>

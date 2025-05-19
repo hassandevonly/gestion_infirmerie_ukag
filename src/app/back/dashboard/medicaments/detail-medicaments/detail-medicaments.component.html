@@ -86,8 +86,6 @@
                                                     </th>
                                                     <th style="width: 15%">
                                                         Email Fournisseur
-                                                    <th style="width: 20%" class="text-center" *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
-                                                        Actions
                                                     </th>
                                                 </tr>
                                             </thead>
@@ -154,16 +152,6 @@
                                                         <strong>
                                                             {{medoc.adresse_email}}
                                                         </strong>
-                                                    </td>
-                                                    <td class=" text-right" *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
-                                                        <button class="btn btn-info btn-sm" >
-                                                            <i class="fas fa-pencil-alt">
-                                                            </i>     
-                                                        </button> 
-                                                        <button class="btn btn-danger btn-sm">
-                                                            <i class="fas fa-trash">
-                                                            </i>
-                                                        </button>
                                                     </td>
                                                 </tr>
                                             </tbody>

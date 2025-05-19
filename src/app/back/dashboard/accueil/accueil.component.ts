@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Consultations } from 'src/app/models/consultations/consultations';
@@ -7,6 +7,7 @@ import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ConsultationService } from 'src/app/services/consultation/realtime/consultation.service';
 import { MedicamentsService } from 'src/app/services/medicaments/medicaments.service';
+import { UtilisateursService } from 'src/app/services/utilisateurs/utilisateurs.service';
 
 @Component({
   selector: 'app-accueil',
@@ -14,6 +15,8 @@ import { MedicamentsService } from 'src/app/services/medicaments/medicaments.ser
   styleUrls: ['./accueil.component.scss']
 })
 export class AccueilComponent {
+  @ViewChild('zoneAImprimer') zoneAImprimer!: ElementRef;
+  voirOrdonance : boolean = false
   onsultations$!: Observable<Consultations[]>;
   userID = ''
   currentUserData?: Observable<Utilisateurs | null>
@@ -27,11 +30,13 @@ export class AccueilComponent {
   realtimeDatas: Consultations[] = [];
   filteredData: Consultations[] = [];
   filterMedoc: Medicaments[] = []
-  dataMedoc: Medicaments[] =[]
+  dataMedoc: Medicaments[] = []
   totalData = 0
   totalMedoc = 0
   searchTerm: string = '';
   logoUrl = 'img/Logo.jpg';
+  medecins: Utilisateurs[] = [];
+  today: string = new Date().toLocaleDateString();
 
 
   constructor(
@@ -39,7 +44,8 @@ export class AccueilComponent {
     private route: Router,
     private router: ActivatedRoute,
     private realConsult: ConsultationService,
-    private realMedicament: MedicamentsService
+    private realMedicament: MedicamentsService,
+    private usersService: UtilisateursService
 
   ) {
     const user = this.router.snapshot.data['user'];
@@ -87,6 +93,11 @@ export class AccueilComponent {
   ngOnInit(): void {
     this.getAllConsultationsSorted()
     this.getAllMedicament()
+    this.usersService.getUtilisateursMedecins().subscribe(data => {
+      this.medecins = data;
+      console.log("Voici les comptes medecin : " + this.medecins);
+
+    });
   }
 
   newConsultation() {
@@ -178,42 +189,310 @@ export class AccueilComponent {
 
   }
 
-  imprimerConsultation(consult: Consultations): void {
-    const logoUrl = 'assets/Logo.jpg'; // Corrected path relative to the public folder
+  // imprimerConsultation(consult: Consultations): void {
+  //   const contenu = this.zoneAImprimer.nativeElement.innerHTML;
+  //   const logoUrl = `${location.origin}/assets/img/Logo.jpg`;
 
-    const contenu = `
-      <html>
-        <head>
-          <style>
-            body { font-family: Arial; margin: 40px; }
-            .header { text-align: center; }
-            .logo { width: 100px; }
-            .content { margin-top: 20px; }
-          </style>
-        </head>
-        <body>
-          <div class="header">
-            <img class="logo" src="${logoUrl}" alt="Logo" />
-            <h2>Fiche de consultation</h2>
-          </div>
-          <div class="content">
-            <p><strong>Nom :</strong> ${consult.nom}</p>
-            <p><strong>Date :</strong> ${consult.dateConsultation}</p>
-            <p><strong>Motif :</strong> ${consult.motif}</p>
-            <!-- Ajoute d'autres champs ici si besoin -->
-          </div>
-        </body>
-      </html>
-    `;
+  //   const fenetre = window.open('', '', 'height=700,width=900');
+  //   if (fenetre) {
+  //     fenetre.document.write(`
+  //       <html>
+  // <head>
+  //   <title>Ordonnance Médicale</title>
+  //   <style>
+  //     * {
+  //       box-sizing: border-box;
+  //     }
 
-    const fenetre = window.open('', '_blank', 'height=600,width=800');
-    if (fenetre) {
-      fenetre.document.write(contenu);
-      fenetre.document.close();
-      setTimeout(() => {
-        fenetre.print();
-        fenetre.close();
-      }, 500);
+  //     body {
+  //       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  //       padding: 40px;
+  //       color: #2e2e2e;
+  //       background-color: white;
+  //       line-height: 1.6;
+  //     }
+
+  //     .header {
+  //       display: flex;
+  //       align-items: center;
+  //       margin-bottom: 30px;
+  //       border-bottom: 2px solid #444;
+  //       padding-bottom: 10px;
+  //     }
+
+  //     .logo {
+  //       max-width: 100px;
+  //       height: auto;
+  //       margin-right: 20px;
+  //     }
+
+  //     .clinic-info {
+  //       flex: 1;
+  //     }
+
+  //     .clinic-info h2 {
+  //       margin: 0;
+  //       font-size: 22px;
+  //       color: #007b9a;
+  //     }
+
+  //     .clinic-info p {
+  //       margin: 2px 0;
+  //       font-size: 14px;
+  //     }
+
+  //     .patient-info {
+  //       margin: 30px 0;
+  //       font-size: 16px;
+  //     }
+
+  //     .patient-info p {
+  //       margin: 6px 0;
+  //     }
+
+  //     h3 {
+  //       margin-top: 30px;
+  //       color: #007b9a;
+  //       border-bottom: 1px dashed #007b9a;
+  //       padding-bottom: 4px;
+  //     }
+
+  //     .ordonnance-list {
+  //       list-style: disc;
+  //       padding-left: 25px;
+  //       font-size: 15px;
+  //     }
+
+  //     .signature {
+  //       margin-top: 50px;
+  //       font-size: 16px;
+  //     }
+
+  //     .signature p {
+  //       margin: 5px 0;
+  //     }
+  //   </style>
+  // </head>
+  // <body>
+
+  //           <img src="${logoUrl}" alt="Logo" class="logo" />
+  //           ${contenu}
+  //         </body>
+  //       </html>
+  //     `);
+  //     fenetre.document.close();
+  //     fenetre.focus();
+  //     fenetre.print();
+  //     fenetre.close();
+  //   }
+  // }
+  // imprimerConsultation(consultation: Consultations) {
+  //   const imageUrl = window.location.origin + '/assets/img/Logo.jpg';
+  
+  //   const patient = consultation.nom || consultation.prenom || 'Inconnu';
+  //   const date = consultation.dateConsultation || 'Date non précisée';
+  //   const medecin = consultation.nom_medecin || 'Médecin inconnu';
+  //   const traitements: string | string[] = consultation.traitement || ['Aucun traitement'];
+  
+  //   const printWindow = window.open('', '_blank');
+  //   printWindow!.document.write(`
+  //     <html>
+  //       <head>
+  //         <title>Ordonnance Médicale</title>
+  //         <style>
+  //           body {
+  //             font-family: Arial, sans-serif;
+  //             padding: 40px;
+  //             color: #333;
+  //           }
+  //           .header {
+  //             display: flex;
+  //             align-items: center;
+  //             margin-bottom: 30px;
+  //             border-bottom: 2px solid #ccc;
+  //             padding-bottom: 10px;
+  //           }
+  //           .logo {
+  //             width: 100px;
+  //             height: auto;
+  //             margin-right: 20px;
+  //             object-fit: contain;
+  //           }
+  //           .clinic-info h2 {
+  //             margin: 0;
+  //             font-size: 22px;
+  //             color: #2c3e50;
+  //           }
+  //           .clinic-info p {
+  //             margin: 2px 0;
+  //             font-size: 14px;
+  //             color: #555;
+  //           }
+  //           .ordonnance-section {
+  //             margin-top: 30px;
+  //           }
+  //           .ordonnance-section h3 {
+  //             font-size: 18px;
+  //             color: #2980b9;
+  //             border-bottom: 1px solid
+  
+  //             padding-bottom: 5px;
+  //           }
+  //           .ordonnance-list {
+  //             list-style: disc;
+  //             margin-left: 20px;
+  //             margin-top: 10px;
+  //           }
+  //           .signature {
+  //             margin-top: 60px;
+  //             text-align: right;
+  //             font-style: italic;
+  //             color: #555;
+  //           }
+  //         </style>
+  //       </head>
+  //       <body>
+  //         <div class="header">
+  //           <img src="${imageUrl}" class="logo" alt="Logo Clinique" />
+  //           <div class="clinic-info">
+  //             <h2>Clinique Santé+</h2>
+  //             <p>Adresse : 123 Rue de la Santé</p>
+  //             <p>Téléphone : +224 620 00 00 00</p>
+  //             <p>Email : contact@cliniquesanteplus.com</p>
+  //           </div>
+  //         </div>
+  
+  //         <div class="ordonnance-section">
+  //           <h3>Ordonnance Médicale</h3>
+  //           <p><strong>Patient :</strong> ${consultation.nom} ${consultation.prenom}</p>
+  //           <p><strong>Date :</strong> ${consultation.dateConsultation}</p>
+  
+  //           <ul class="ordonnance-list">
+  //             <li>${consultation.traitement}</li>
+              
+  //           </ul>
+  //         </div>
+  
+  //         <div class="signature">
+  //           <p>Dr. ${consultation.nom_medecin}</p>
+  //           <p>Signature :</p>
+  //         </div>
+  
+  //         <script>
+  //           window.onload = function() {
+  //             window.print();
+  //             window.close();
+  //           }
+  //         </script>
+  //       </body>
+  //     </html>
+  //   `);
+  // }
+
+  imprimerConsultation(consultation: Consultations) {
+    const imageUrl = `${location.origin}/assets/img/Logo.jpg`;
+  
+    const patient = `${consultation.nom || ''} ${consultation.prenom || ''}`.trim() || 'Inconnu';
+    const date = consultation.dateConsultation || 'Date non précisée';
+    const medecin = consultation.nom_medecin || 'Médecin inconnu';
+    const traitements = Array.isArray(consultation.traitement) ? consultation.traitement : [consultation.traitement || 'Aucun traitement'];
+  
+    const printWindow = window.open('', '', 'width=900,height=700');
+  
+    if (printWindow) {
+      printWindow.document.write(`
+        <html>
+          <head>
+            <title>Ordonnance Médicale</title>
+            <style>
+              body {
+                font-family: Arial, sans-serif;
+                padding: 40px;
+                color: #333;
+              }
+              .header {
+                display: flex;
+                align-items: center;
+                margin-bottom: 30px;
+                border-bottom: 2px solid #ccc;
+                padding-bottom: 10px;
+              }
+              .logo {
+                width: 100px;
+                height: auto;
+                margin-right: 20px;
+                object-fit: contain;
+              }
+              .clinic-info h2 {
+                margin: 0;
+                font-size: 22px;
+                color: #2c3e50;
+              }
+              .clinic-info p {
+                margin: 2px 0;
+                font-size: 14px;
+                color: #555;
+              }
+              .ordonnance-section {
+                margin-top: 30px;
+              }
+              .ordonnance-section h3 {
+                font-size: 18px;
+                color: #2980b9;
+                border-bottom: 1px solid #2980b9;
+                padding-bottom: 5px;
+              }
+              .ordonnance-list {
+                list-style: disc;
+                margin-left: 20px;
+                margin-top: 10px;
+              }
+              .signature {
+                margin-top: 60px;
+                text-align: right;
+                font-style: italic;
+                color: #555;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <img src="${imageUrl}" class="logo" alt="Logo Clinique" />
+              <div class="clinic-info">
+                <h2>Infirmerie de l'Université Kofi Annan de Guinée</h2>
+                <p>Adresse : Nongo C/Lambanyi</p>
+                <p>Téléphone : +224 620 00 00 00</p>
+                <p>Email : infirmerie@ukaguinee.org</p>
+              </div>
+            </div>
+  
+            <div class="ordonnance-section">
+              <h3>Ordonnance Médicale</h3>
+              <p><strong>Patient :</strong> ${patient}</p>
+              <p><strong>Date :</strong> ${date}</p>
+  
+              <ul class="ordonnance-list">
+                ${traitements.map(traitement => `<li>${traitement}</li>`).join('')}
+              </ul>
+            </div>
+  
+            <div class="signature">
+              <p>Dr. ${medecin}</p>
+              <p>Signature :</p>
+            </div>
+          </body>
+        </html>
+      `);
+  
+      printWindow.document.close();
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
     }
   }
+  
+  histoApprovisionnements(){
+    this.route.navigateByUrl('dashboard/medicaments/histo-approvisionnement')
+  }
+  
 }

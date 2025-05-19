@@ -3,8 +3,10 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Consultations } from 'src/app/models/consultations/consultations';
+import { Approvisionnements } from 'src/app/models/medicaments/approvisionnements';
 import { Medicaments } from 'src/app/models/medicaments/medicaments';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
+import { AppromedocsService } from 'src/app/services/approvisionnements/appromedocs.service';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { MedicamentsService } from 'src/app/services/medicaments/medicaments.service';
 
@@ -27,10 +29,11 @@ export class EditMedicamentComponent {
   logistiqueViewMenu: boolean = false
   gestionnaireViewMenu: boolean = false
   realtimeDatas: Medicaments[] = [];
-  filteredData: Medicaments[] = [];
   searchTerm: string = '';
   totalData = 0
   consultations: Medicaments[] = [];
+  approRealtimeData!: Approvisionnements | null;
+  filteredData: Approvisionnements[] = [];
 
 
 
@@ -39,37 +42,32 @@ export class EditMedicamentComponent {
     private router: Router,
     private route: ActivatedRoute,
     private realMedoc: MedicamentsService,
-    private fb : FormBuilder
+    private approMedoc: AppromedocsService,
+    private fb: FormBuilder
   ) {
     this.route.paramMap.subscribe(params => {
       const id = params.get('id');
       if (id) {
         this.id = id;
         console.log('Consultation ID récupéré:', id);
-        this.realMedoc.getMedicamentById(id).subscribe(data => {
+        this.approMedoc.getMedicamentById(id).subscribe(data => {
           console.log("Data unique: ", data);
-          this.realtimeData = data;
-          console.log("Realtime Data dans edit: ", this.realtimeData);
-          if (this.realtimeData) {
+          this.approRealtimeData = data;
+          console.log("Realtime Data dans edit: ", this.approRealtimeData);
+          if (this.approRealtimeData) {
             this.medocForm = this.fb.group({
-              nom_commercial: ['', Validators.required],
-              nom_generique: ['', Validators.required],
-              categorie: ['', Validators.required],
-              forme: ['', Validators.required],
+              nom_produit: ['', Validators.required],
               dosage: ['', Validators.required],
-              quantite_dispo: ['', Validators.required],
+              quantite_total: ['', Validators.required],
               seuil_minimum: ['', Validators.required],
               date_peremption: ['', Validators.required],
             });
             this.medocForm.setValue({
-              nom_commercial: this.realtimeData.nom_commercial,
-              nom_generique: this.realtimeData.nom_generique,
-              categorie: this.realtimeData.categorie,
-              forme: this.realtimeData.forme,
-              dosage: this.realtimeData.dosage,
-              quantite_dispo: this.realtimeData.quantite_dispo,
-              seuil_minimum: this.realtimeData.seuil_minimum,
-              date_peremption: this.realtimeData.date_peremption,
+              nom_produit: this.approRealtimeData.nom_produit,
+              dosage: this.approRealtimeData.dosage,
+              quantite_total: this.approRealtimeData.quantite_total,
+              date_peremption: this.approRealtimeData.date_peremption,
+              seuil_minimum: this.approRealtimeData.seuil_minimum,
             });
           }
         });
@@ -86,19 +84,16 @@ export class EditMedicamentComponent {
     if (this.medocForm.valid) {
       console.log("La quantite : " + this.medocForm.value.quantite);
 
-      const updatedConsultation: Medicaments = {
-        nom_commercial: this.medocForm.value.nom_commercial,
-              nom_generique: this.medocForm.value.nom_generique,
-              categorie: this.medocForm.value.categorie,
-              forme: this.medocForm.value.forme,
-              dosage: this.medocForm.value.dosage,
-              quantite_dispo: this.medocForm.value.quantite_dispo,
-              seuil_minimum: this.medocForm.value.seuil_minimum,
-              date_peremption: this.medocForm.value.date_peremption,
+      const updatedMedicaments: Approvisionnements = {
+        nom_produit: this.medocForm.value.nom_produit,
+        dosage: this.medocForm.value.dosage,
+        quantite_total: this.medocForm.value.quantite_total,
+        date_peremption: this.medocForm.value.date_peremption,
+        seuil_minimum: this.medocForm.value.seuil_minimum,
       };
       console.log(this.id);
 
-      this.realMedoc.updateMedicament(this.id, updatedConsultation)
+      this.approMedoc.updateMedicament(this.id, updatedMedicaments)
         .then(() => {
           console.log('Produit mis à jour avec succès');
           this.router.navigate(['/dashboard/medicaments/list-medicament']);

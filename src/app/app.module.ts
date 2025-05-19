@@ -26,6 +26,7 @@ import { EditMedicamentComponent } from './back/dashboard/medicaments/edit-medic
 import { NewMedicamentComponent } from './back/dashboard/medicaments/new-medicament/new-medicament.component';
 import { UpdateMedicamentComponent } from './back/dashboard/medicaments/update-medicament/update-medicament.component';
 import { FooterComponent } from './back/dashboard/includes/footer/footer.component';
+import { HistoMedicamentComponent } from './back/dashboard/medicaments/histo-medicament/histo-medicament.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { FooterComponent } from './back/dashboard/includes/footer/footer.compone
     EditMedicamentComponent,
     NewMedicamentComponent,
     UpdateMedicamentComponent,
-    FooterComponent
+    FooterComponent,
+    HistoMedicamentComponent
   ],
   imports: [
     BrowserModule,

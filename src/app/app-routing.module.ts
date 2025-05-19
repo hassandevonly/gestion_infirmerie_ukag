@@ -14,6 +14,7 @@ import { DetailMedicamentsComponent } from './back/dashboard/medicaments/detail-
 import { UpdateMedicamentComponent } from './back/dashboard/medicaments/update-medicament/update-medicament.component';
 import { EditMedicamentComponent } from './back/dashboard/medicaments/edit-medicament/edit-medicament.component';
 import { FirebaseUserResolverService } from './services/resolver/firebase-user-resolver.service';
+import { HistoMedicamentComponent } from './back/dashboard/medicaments/histo-medicament/histo-medicament.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'dashboard/medicaments/detail-medicament/:id', component: DetailMedicamentsComponent, resolve: {user: FirebaseUserResolverService}},
   { path: 'dashboard/medicaments/update-medicament', component: UpdateMedicamentComponent},
   { path: 'dashboard/medicaments/edit-medicament/:id', component: EditMedicamentComponent, resolve: {user: FirebaseUserResolverService} },
+  { path: 'dashboard/medicaments/histo-approvisionnement', component: HistoMedicamentComponent },
 ];
 
 @NgModule({

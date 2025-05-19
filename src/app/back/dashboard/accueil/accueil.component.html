@@ -24,36 +24,20 @@
             <div class="container-fluid">
                 <!-- Small boxes (Stat box) -->
                 <div class="row">
-                    
+
                     <!-- ./col -->
                     <div class="col-lg-4 col-6">
                         <!-- small box -->
                         <div class="small-box bg-success">
                             <div class="inner">
-                                <h3>{{totalData}} </h3>
+                                <h3>Total Consultation </h3>
 
-                                <p>Total Consultation</p>
+                                <h5>{{totalData}}</h5>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Plus d'info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
-                        </div>
-                    </div>
-                    <!-- ./col -->
-                    <div class="col-lg-4 col-6">
-                        <!-- small box -->
-                        <div class="small-box bg-warning">
-                            <div class="inner">
-                                <h3>44</h3>
-
-                                <p>Utilisateur</p>
-                            </div>
-                            <div class="icon">
-                                <i class="ion ion-person"></i>
-                            </div>
-                            <a href="#" class="small-box-footer">Plus d'info <i
+                            <a class="small-box-footer">Plus d'info <i
                                     class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
@@ -62,14 +46,30 @@
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
-                                <h3>{{totalMedoc}}</h3>
+                                <h3>Produit en Stock </h3>
 
-                                <p>Produit en Stock</p>
+                                <h5>{{totalMedoc}}</h5>
                             </div>
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a href="#" class="small-box-footer">Plus d'info <i
+                            <a class="small-box-footer" >Plus d'info <i
+                                    class="fas fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <!-- ./col -->
+                    <div class="col-lg-4 col-6">
+                        <!-- small box -->
+                        <div class="small-box bg-warning">
+                            <div class="inner">
+                                <h3>Historique d'approvisionnement</h3>
+
+                                <h5>44</h5>
+                            </div>
+                            <div class="icon">
+                                <i class="ion ion-person"></i>
+                            </div>
+                            <a class="small-box-footer" (click)="histoApprovisionnements()">Plus d'info <i
                                     class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
@@ -129,7 +129,7 @@
                                         </div>
                                     </div>
                                     <div class="card-body p-0">
-                                        <table class="table" >
+                                        <table class="table">
                                             <thead>
                                                 <tr>
                                                     <th style="width: 1%">
@@ -205,12 +205,11 @@
                                                             </i>
 
                                                         </button>
-                                                        <button class="btn btn-clear btn-sm"
-                                                            >
+                                                        <button class="btn btn-clear btn-sm">
 
                                                         </button>
-                                                        <button class="btn btn-warning btn-md" (click)="imprimerConsultation(consult)"
-                                                            >
+                                                        <button class="btn btn-warning btn-md"
+                                                            (click)="imprimerConsultation(consult)">
                                                             <i class="fas fa-print">
                                                             </i>
                                                         </button>
@@ -224,6 +223,38 @@
                                     </div>
                                     <!-- /.card-body -->
                                 </div>
+                                <div class="ordonance-wrapper" #zoneAImprimer *ngIf="voirOrdonance">
+                                    <div class="header">
+                                        <img src="assets/img/Logo.jpg" alt="Logo Clinique" class="logo" />
+                                        <div class="clinic-info">
+                                            <h2>Infirmerie de l'Université Kofi Annan de Guinée</h2>
+                                            <p>Guinée, Conakry</p>
+                                            <p>Tél : +224 ********</p>
+                                            <p>Email : contact@clinique.com</p>
+                                        </div>
+                                    </div>
+
+                                    <hr />
+
+                                    <div class="patient-info">
+                                        <p><strong>Nom du patient :</strong> Mamadou Diallo</p>
+                                        <p><strong>Âge :</strong> 35 ans</p>
+                                        <p><strong>Date :</strong> {{ today | date: 'dd/MM/yyyy' }}</p>
+                                    </div>
+
+                                    <h3>Ordonnance :</h3>
+                                    <ul class="ordonnance-list">
+                                        <li>Paracétamol 500mg - 1 comprimé matin, midi et soir pendant 5 jours</li>
+                                        <li>Amoxicilline 1g - 1 comprimé matin et soir pendant 7 jours</li>
+                                        <li>Vitamine C - 1 comprimé par jour pendant 10 jours</li>
+                                    </ul>
+
+                                    <div class="signature">
+                                        <p><strong>Médecin :</strong> Dr. Ibrahima Sow</p>
+                                        <p>Signature : ________________________</p>
+                                    </div>
+                                </div>
+
                                 <!-- /.card -->
 
                             </section>
