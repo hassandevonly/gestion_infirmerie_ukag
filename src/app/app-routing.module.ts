@@ -31,7 +31,7 @@ const routes: Routes = [
   { path: 'dashboard/medicaments/detail-medicament/:id', component: DetailMedicamentsComponent, resolve: {user: FirebaseUserResolverService}},
   { path: 'dashboard/medicaments/update-medicament', component: UpdateMedicamentComponent},
   { path: 'dashboard/medicaments/edit-medicament/:id', component: EditMedicamentComponent, resolve: {user: FirebaseUserResolverService} },
-  { path: 'dashboard/medicaments/histo-approvisionnement', component: HistoMedicamentComponent },
+  { path: 'dashboard/medicaments/histo-approvisionnement', component: HistoMedicamentComponent, resolve: {user: FirebaseUserResolverService} },
 ];
 
 @NgModule({

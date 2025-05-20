@@ -37,12 +37,11 @@
                             <div class="icon">
                                 <i class="ion ion-stats-bars"></i>
                             </div>
-                            <a class="small-box-footer">Plus d'info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <a class="small-box-footer">Plus d'info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-4 col-6" *ngIf="role !== 'Medecin'">
                         <!-- small box -->
                         <div class="small-box bg-danger">
                             <div class="inner">
@@ -53,26 +52,26 @@
                             <div class="icon">
                                 <i class="ion ion-pie-graph"></i>
                             </div>
-                            <a class="small-box-footer" >Plus d'info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <a class="small-box-footer">Plus d'info <i class="fas fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                     <!-- ./col -->
-                    <div class="col-lg-4 col-6">
+                    <div class="col-lg-4 col-6" *ngIf="role !== 'Medecin'">
                         <!-- small box -->
                         <div class="small-box bg-warning">
                             <div class="inner">
-                                <h3>Historique d'approvisionnement</h3>
-
-                                <h5>44</h5>
+                                <h5>Historique <br> d'approvisionnement</h5>
+                                <h5>{{totalHisto}}</h5>
                             </div>
                             <div class="icon">
-                                <i class="ion ion-person"></i>
+                                <i class="ion ion-folder"></i>
                             </div>
-                            <a class="small-box-footer" (click)="histoApprovisionnements()">Plus d'info <i
-                                    class="fas fa-arrow-circle-right"></i></a>
+                            <a class="small-box-footer" (click)="histoApprovisionnements()">
+                                Plus d'info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
                     </div>
+
                     <!-- ./col -->
                 </div>
                 <!-- /.row -->
@@ -205,8 +204,10 @@
                                                             </i>
 
                                                         </button>
-                                                        <button class="btn btn-clear btn-sm">
-
+                                                        <button class="btn btn-danger btn-md" *ngIf="role === 'Admin'"
+                                                            (click)="deleteConsultation(consult)">
+                                                            <i class="fas fa-trash">
+                                                            </i>
                                                         </button>
                                                         <button class="btn btn-warning btn-md"
                                                             (click)="imprimerConsultation(consult)">

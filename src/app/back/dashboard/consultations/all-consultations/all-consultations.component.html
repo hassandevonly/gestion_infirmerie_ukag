@@ -132,10 +132,11 @@
                                                     </i>
 
                                                 </button>
-                                                <button class="btn btn-clear btn-sm">
-
+                                                <button class="btn btn-danger btn-md"  *ngIf="role === 'Admin'" (click)="deleteConsultation(consult)">
+                                                    <i class="fas fa-trash">
+                                                    </i>
                                                 </button>
-                                                <button class="btn btn-warning btn-md"
+                                                <button class="btn btn-warning btn-md" (click)="imprimerConsultation(consult)"
                                                     >
                                                     <i class="fas fa-print">
                                                     </i>

@@ -3,6 +3,7 @@ import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { Observable } from 'rxjs';
+import { HistoApprovisionnement } from 'src/app/models/medicaments/histo-approvisionnement';
 import { Medicaments } from 'src/app/models/medicaments/medicaments';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 import { AuthService } from 'src/app/services/auth/auth.service';
@@ -17,9 +18,9 @@ export class NewMedicamentComponent {
   ajoutMedoc: boolean = false
   approvisionnerMedoc: boolean = false
   medocForm!: FormGroup
-  approForm!: FormGroup 
+  approForm!: FormGroup
   userID = ''
-  currentUserData?: Observable <Utilisateurs | null>
+  currentUserData?: Observable<Utilisateurs | null>
   userData!: Utilisateurs | undefined;
   realtimeData: Medicaments[] = [];
   filteredData: Medicaments[] = [];
@@ -44,9 +45,9 @@ export class NewMedicamentComponent {
     })
 
     this.approForm = fb.group({
-      nom_produit: ['',Validators.required],
+      nom_produit: ['', Validators.required],
       dosage: ['', Validators.required],
-      quantite_total: ['',Validators.required],
+      quantite_total: ['', Validators.required],
       seuil_minimum: ['', Validators.required],
       date_peremption: ['', Validators.required]
     })
@@ -79,9 +80,9 @@ export class NewMedicamentComponent {
 
   ngOnInit(): void {
     this.approForm = this.fb.group({
-      nom_produit: ['',Validators.required],
+      nom_produit: ['', Validators.required],
       dosage: ['', Validators.required],
-      quantite_total: ['',Validators.required],
+      quantite_total: ['', Validators.required],
       seuil_minimum: ['', Validators.required],
       date_peremption: ['', Validators.required]
     })
@@ -91,7 +92,7 @@ export class NewMedicamentComponent {
       const produitSelectionne = this.filteredData.find(p => p.nom_commercial === nomProduit);
       this.dosagesDisponibles = produitSelectionne?.dosage ?? [];
     });
-    
+
   }
   getAllApprovisionnements() {
     this.db.list('approvisionnement').snapshotChanges().subscribe(actions => {
@@ -109,31 +110,31 @@ export class NewMedicamentComponent {
       const nomProduit = formData.nom_produit;
       const dosage = formData.dosage;
       const quantite = Number(formData.quantite_total);
-  
+
       if (isNaN(quantite)) {
         console.error("Quantité invalide !");
         alert("Veuillez entrer une quantité valide !");
         return;
       }
-  
+
       // Utilisation d'un abonnement temporaire (prise de 1 seul résultat)
       const sub = this.db.list('approvisionnement', ref =>
         ref.orderByChild('nom_produit').equalTo(nomProduit)
       ).snapshotChanges().subscribe(res => {
         let found = false;
-  
+
         res.forEach(item => {
           const data: any = item.payload.val();
           const ancienneQuantite = Number(data.quantite_total);
-  
+
           if (data.dosage === dosage) {
             if (isNaN(ancienneQuantite)) {
               console.error("Quantité existante invalide !");
               return;
             }
-  
+
             const nouvelleQuantite = ancienneQuantite + quantite;
-  
+
             this.db.object(`approvisionnement/${item.key}`).update({
               quantite_total: nouvelleQuantite
             }).then(() => {
@@ -142,11 +143,24 @@ export class NewMedicamentComponent {
             }).catch((err) => {
               console.error("❌ Erreur lors de la mise à jour :", err);
             });
-  
+
+            const histoAppro: HistoApprovisionnement = {
+              nom_utilisateur: this.userData?.nom + " " + this.userData?.prenom,
+              date_action: new Date().toISOString(),
+              type_action: "Re-approvisionnement",
+              texte_sur_action: "Mise à jour du produit " + nomProduit + ", Dosage : " + dosage + ", Quantité : " + nouvelleQuantite
+            }
+            this.db.list('histo-approvisionnement').push(histoAppro)
+              .then(() => {
+                console.log("Historique enregistré avec succès");
+              })
+              .catch(err => {
+                console.error("❌ Erreur lors de l'ajout :", err);
+              })
             found = true;
           }
         });
-  
+
         if (!found) {
           this.db.list('approvisionnement').push(formData)
             .then(() => {
@@ -156,14 +170,27 @@ export class NewMedicamentComponent {
             .catch(err => {
               console.error("❌ Erreur lors de l'ajout :", err);
             });
+          const histoAppro: HistoApprovisionnement = {
+            nom_utilisateur: this.userData?.nom + " " + this.userData?.prenom,
+            date_action: new Date().toISOString(),
+            type_action: "Approvisionnement",
+            texte_sur_action: "Ajout du produit " + nomProduit + ", Dosage : " + dosage + ", Quantité : " + quantite
+          }
+          this.db.list('histo-approvisionnement').push(histoAppro)
+            .then(() => {
+              console.log("Historique enregistré avec succès");
+            })
+            .catch(err => {
+              console.error("❌ Erreur lors de l'ajout :", err);
+            })
         }
-  
+
         // 🔒 Désabonnement ici pour éviter la boucle infinie
         sub.unsubscribe();
       });
     }
   }
-  
+
 
   getAllMedicament() {
     this.medocService.getAllMedicaments().subscribe({
@@ -208,15 +235,15 @@ export class NewMedicamentComponent {
 
   }
 
-  ajouterMedoc(){
+  ajouterMedoc() {
     this.approvisionnerMedoc = false
     this.ajoutMedoc = true
-    
+
   }
-  approMedoc(){
+  approMedoc() {
     this.ajoutMedoc = false
     this.approvisionnerMedoc = true
-    this.approForm.invalid 
+    this.approForm.invalid
   }
 
 
