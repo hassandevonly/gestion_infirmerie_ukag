@@ -1,11 +1,13 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { first, Observable } from 'rxjs';
 import { Consultations } from 'src/app/models/consultations/consultations';
+import { HistoApprovisionnement } from 'src/app/models/medicaments/histo-approvisionnement';
 import { Medicaments } from 'src/app/models/medicaments/medicaments';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { ConsultationService } from 'src/app/services/consultation/realtime/consultation.service';
+import { HistoApprovisionnementsService } from 'src/app/services/histo-approvisionnements/histo-approvisionnements.service';
 import { MedicamentsService } from 'src/app/services/medicaments/medicaments.service';
 import { UtilisateursService } from 'src/app/services/utilisateurs/utilisateurs.service';
 
@@ -30,13 +32,18 @@ export class AccueilComponent {
   realtimeDatas: Consultations[] = [];
   filteredData: Consultations[] = [];
   filterMedoc: Medicaments[] = []
+  filterHisto: HistoApprovisionnement[] = []
+  dataHisto: HistoApprovisionnement[] = []
   dataMedoc: Medicaments[] = []
   totalData = 0
   totalMedoc = 0
+  totalHisto = 0
   searchTerm: string = '';
   logoUrl = 'img/Logo.jpg';
   medecins: Utilisateurs[] = [];
   today: string = new Date().toLocaleDateString();
+  histoAppro: HistoApprovisionnement[] = []
+  role : string | null = null
 
 
   constructor(
@@ -45,9 +52,11 @@ export class AccueilComponent {
     private router: ActivatedRoute,
     private realConsult: ConsultationService,
     private realMedicament: MedicamentsService,
+    private histoApprovisionnement: HistoApprovisionnementsService,
     private usersService: UtilisateursService
 
   ) {
+    
     const user = this.router.snapshot.data['user'];
     if (user && user.uid) {
       this.userID = user.uid;
@@ -93,6 +102,12 @@ export class AccueilComponent {
   ngOnInit(): void {
     this.getAllConsultationsSorted()
     this.getAllMedicament()
+    this.getHistoApprovisionnement()
+    // Si le rôle est un Observable
+    this.authService.getUserRole().pipe(first()).subscribe(role => {
+      this.role = role;
+      console.log('Rôle utilisateur :', this.role);
+    });
     this.usersService.getUtilisateursMedecins().subscribe(data => {
       this.medecins = data;
       console.log("Voici les comptes medecin : " + this.medecins);
@@ -152,6 +167,23 @@ export class AccueilComponent {
       }
     });
   }
+
+  getHistoApprovisionnement(){
+    this.histoApprovisionnement.getHistoApprovisionnement().subscribe({
+      next: (data) => {
+        console.log("Data reçue: ", data);
+        this.dataHisto = data.sort((a, b) => a.nom_utilisateur.localeCompare(b.nom_utilisateur)); // Sort alphabetically
+        this.filterHisto = [...this.dataHisto];
+        this.totalHisto = data.length;
+        console.log("Nombre total de données: ", this.totalData);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des medicaments:', err);
+      }
+    });
+  }
+
+
 
   filterMedicaments(): void {
     const term = this.searchTerm.toLowerCase();
@@ -389,106 +421,127 @@ export class AccueilComponent {
   //   `);
   // }
 
+  loadImageAsBase64(url: string): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        const reader = new FileReader();
+        reader.onloadend = function () {
+          resolve(reader.result as string);
+        };
+        reader.readAsDataURL(xhr.response);
+      };
+      xhr.onerror = reject;
+      xhr.open('GET', url);
+      xhr.responseType = 'blob';
+      xhr.send();
+    });
+  }
+
   imprimerConsultation(consultation: Consultations) {
-    const imageUrl = `${location.origin}/assets/img/Logo.jpg`;
+    this.loadImageAsBase64('/assets/img/Logo.jpg').then((base64Logo) => {
+      const patient = `${consultation.nom || ''} ${consultation.prenom || ''}`.trim() || 'Inconnu';
+      const date = consultation.dateConsultation || 'Date non précisée';
+      const medecin = consultation.nom_medecin || 'Médecin inconnu';
+      const traitements = Array.isArray(consultation.traitement)
+        ? consultation.traitement
+        : [consultation.traitement || 'Aucun traitement'];
   
-    const patient = `${consultation.nom || ''} ${consultation.prenom || ''}`.trim() || 'Inconnu';
-    const date = consultation.dateConsultation || 'Date non précisée';
-    const medecin = consultation.nom_medecin || 'Médecin inconnu';
-    const traitements = Array.isArray(consultation.traitement) ? consultation.traitement : [consultation.traitement || 'Aucun traitement'];
+      const printWindow = window.open('', '', 'width=900,height=700');
   
-    const printWindow = window.open('', '', 'width=900,height=700');
-  
-    if (printWindow) {
-      printWindow.document.write(`
-        <html>
-          <head>
-            <title>Ordonnance Médicale</title>
-            <style>
-              body {
-                font-family: Arial, sans-serif;
-                padding: 40px;
-                color: #333;
-              }
-              .header {
-                display: flex;
-                align-items: center;
-                margin-bottom: 30px;
-                border-bottom: 2px solid #ccc;
-                padding-bottom: 10px;
-              }
-              .logo {
-                width: 100px;
-                height: auto;
-                margin-right: 20px;
-                object-fit: contain;
-              }
-              .clinic-info h2 {
-                margin: 0;
-                font-size: 22px;
-                color: #2c3e50;
-              }
-              .clinic-info p {
-                margin: 2px 0;
-                font-size: 14px;
-                color: #555;
-              }
-              .ordonnance-section {
-                margin-top: 30px;
-              }
-              .ordonnance-section h3 {
-                font-size: 18px;
-                color: #2980b9;
-                border-bottom: 1px solid #2980b9;
-                padding-bottom: 5px;
-              }
-              .ordonnance-list {
-                list-style: disc;
-                margin-left: 20px;
-                margin-top: 10px;
-              }
-              .signature {
-                margin-top: 60px;
-                text-align: right;
-                font-style: italic;
-                color: #555;
-              }
-            </style>
-          </head>
-          <body>
-            <div class="header">
-              <img src="${imageUrl}" class="logo" alt="Logo Clinique" />
-              <div class="clinic-info">
-                <h2>Infirmerie de l'Université Kofi Annan de Guinée</h2>
-                <p>Adresse : Nongo C/Lambanyi</p>
-                <p>Téléphone : +224 620 00 00 00</p>
-                <p>Email : infirmerie@ukaguinee.org</p>
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Ordonnance Médicale</title>
+              <style>
+                body {
+                  font-family: Arial, sans-serif;
+                  padding: 40px;
+                  color: #333;
+                }
+                .header {
+                  display: flex;
+                  align-items: center;
+                  margin-bottom: 30px;
+                  border-bottom: 2px solid #ccc;
+                  padding-bottom: 10px;
+                }
+                .logo {
+                  width: 100px;
+                  height: auto;
+                  margin-right: 20px;
+                  object-fit: contain;
+                }
+                .clinic-info h2 {
+                  margin: 0;
+                  font-size: 22px;
+                  color: #2c3e50;
+                }
+                .clinic-info p {
+                  margin: 2px 0;
+                  font-size: 14px;
+                  color: #555;
+                }
+                .ordonnance-section {
+                  margin-top: 30px;
+                }
+                .ordonnance-section h3 {
+                  font-size: 18px;
+                  color: #2980b9;
+                  border-bottom: 1px solid #2980b9;
+                  padding-bottom: 5px;
+                }
+                .ordonnance-list {
+                  list-style: disc;
+                  margin-left: 20px;
+                  margin-top: 10px;
+                }
+                .signature {
+                  margin-top: 60px;
+                  text-align: right;
+                  font-style: italic;
+                  color: #555;
+                }
+              </style>
+            </head>
+            <body>
+              <div class="header">
+                <img src="${base64Logo}" class="logo" alt="Logo Clinique" />
+                <div class="clinic-info">
+                  <h2>Infirmerie de l'Université Kofi Annan de Guinée</h2>
+                  <p>Adresse : Nongo C/Lambanyi</p>
+                  <p>Téléphone : +224 620 00 00 00</p>
+                  <p>Email : infirmerie@ukaguinee.org</p>
+                </div>
               </div>
-            </div>
   
-            <div class="ordonnance-section">
-              <h3>Ordonnance Médicale</h3>
-              <p><strong>Patient :</strong> ${patient}</p>
-              <p><strong>Date :</strong> ${date}</p>
+              <div class="ordonnance-section">
+                <h3>Ordonnance Médicale</h3>
+                <p><strong>Patient :</strong> ${patient}</p>
+                <p><strong>Date :</strong> ${date}</p>
   
-              <ul class="ordonnance-list">
-                ${traitements.map(traitement => `<li>${traitement}</li>`).join('')}
-              </ul>
-            </div>
+                <ul class="ordonnance-list">
+                  ${traitements.map(traitement => `<li>${traitement}</li>`).join('')}
+                </ul>
+              </div>
   
-            <div class="signature">
-              <p>Dr. ${medecin}</p>
-              <p>Signature :</p>
-            </div>
-          </body>
-        </html>
-      `);
+              <div class="signature">
+                <p>Dr. ${medecin}</p>
+                <p>Signature :</p>
+              </div>
+            </body>
+          </html>
+        `);
   
-      printWindow.document.close();
-      printWindow.focus();
-      printWindow.print();
-      printWindow.close();
-    }
+        printWindow.document.close();
+        printWindow.focus();
+        printWindow.print();
+        printWindow.close();
+      }
+    }).catch(error => {
+      console.error('Erreur lors du chargement du logo :', error);
+    });
   }
   
   histoApprovisionnements(){

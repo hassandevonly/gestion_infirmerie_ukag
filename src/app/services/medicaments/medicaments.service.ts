@@ -152,4 +152,19 @@ export class MedicamentsService {
           throw error;
         }
   }
+
+  //Afficher tous les medicaments
+  getHistoMedicaments() {
+    return this.fireDbRef.snapshotChanges().pipe(
+      map(changes => 
+        changes.map(c => ({
+          id: c.payload.key,
+          ...c.payload.val()
+        }))
+      ),
+      tap(medicaments => {
+        console.log('Tous les medicaments:', medicaments);
+      })
+    );
+  }
 }

@@ -1,7 +1,50 @@
 <app-sidebar></app-sidebar>
 <div class="content-wrapper">
+    <section class="content-header">
+        <div class="container-fluid">
+            <!-- Small boxes (Stat box) -->
+            <div class="row">
+
+                <!-- ./col -->
+                <div class="col-lg-2"></div>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-primary">
+                        <div class="inner">
+                            <h3>Vue en Timeline </h3>
+
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-stats-bars"></i>
+                        </div>
+                        <a class="small-box-footer" (click)="timelineView()">Cliquez ici <i
+                                class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-6">
+                    <!-- small box -->
+                    <div class="small-box bg-danger">
+                        <div class="inner">
+                            <h3>Vue en Tableau</h3>
+
+                            <p></p>
+                        </div>
+                        <div class="icon">
+                            <i class="ion ion-pie-graph"></i>
+                        </div>
+                        <a class="small-box-footer" (click)="tableView()">Cliquez ici <i
+                                class="fas fa-arrow-circle-right"></i></a>
+                    </div>
+                </div>
+                <!-- ./col -->
+                <div class="col-lg-2"></div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
     <!-- Main content -->
     <section class="content">
+
         <div class="row">
             <!-- Left col -->
             <section class="col-lg-12 connectedSortable">
@@ -9,143 +52,197 @@
                 <!-- /.card -->
                 <!-- Content Wrapper. Contains page content -->
                 <div class="wrapper">
+
                     <!-- Content Header (Page header) -->
                     <section class="content-header">
                         <div class="container-fluid">
-                            
                             <div class="row mb-2">
                                 <div class="col-sm-6">
-                                    <h1>Liste des medicaments</h1>
-
+                                    <h1>Historique de l'approvisionnement</h1>
                                 </div>
                                 <div class="col-sm-6">
-
-                                    <h6 class="btn btn-primary btn-md float-sm-right"
-                                        *ngIf="gestionnaireViewMenu || logistiqueViewMenu">
-                                        <i class="fas fa-list">
-                                        </i>
-                                        <a href="dashboard/medicaments/new-medicament"
-                                            style="color: white; font-size: 15px;font-weight: 600;"> Ajouter un
-                                            medicament</a>
-                                    </h6>
+                                    <!-- <ol class="breadcrumb float-sm-right">
+                                        <li class="breadcrumb-item"><a href="#">Home</a></li>
+                                        <li class="breadcrumb-item active">Timeline</li>
+                                    </ol> -->
                                 </div>
                             </div>
                         </div><!-- /.container-fluid -->
                     </section>
+
+                    <!-- Main content -->
                     <section class="content">
+                        <div class="container-fluid">
 
-                        <!-- Default box -->
-                        <!-- /.card -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h3 class="card-title">Liste des médicaments</h3>
+                            <!-- Timelime example  -->
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <!-- The time line -->
+                                    <div *ngIf="timelinedView">
+                                        <div class="timeline" *ngFor="let histo of filteredData">
+                                            <!-- timeline time label -->
+                                            <div class="time-label">
+                                                <span [ngClass]="{
+                                                    'bg-green': histo.type_action === 'Approvisionnement',
+                                                    'bg-red': histo.type_action !== 'Approvisionnement'
+                                                  }">
+                                                    {{ histo.date_action | date:'dd MMM. yyyy' }}
+                                                </span>
 
 
-                                        <div class="card-tools">
-                                            <div class="input-group input-group-sm" style="width: 150px;">
-                                                <input type="text" name="table_search" class="form-control float-right"
-                                                    placeholder="Recherche" [(ngModel)]="searchTerm"
-                                                    (input)="filterMedicaments()">
-
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-default">
-                                                        <i class="fas fa-search"></i>
-                                                    </button>
-                                                </div>
-                                                <button type="button" class="btn btn-tool" data-card-widget="collapse"
-                                                    title="Collapse">
-                                                    <i class="fas fa-minus"></i>
-                                                </button>
                                             </div>
-
+                                            <!-- /.timeline-label -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <!-- <i class="fas fa-list bg-blue"></i> -->
+                                                <!-- <div class="timeline-item">
+                                                    <span class="time"><i class="fas fa-clock"></i> 12:05</span>
+                                                    <h3 class="timeline-header"><a>Approvisionnement</a></h3>
+    
+                                                    <div class="timeline-body">
+                                                        Etsy doostang zoodles disqus groupon greplin oooj voxy zoodles,
+                                                        weebly ning heekya handango imeem plugg dopplr jibjab, movity
+                                                        jajah plickers sifteo edmodo ifttt zimbra. Babblely odeo kaboodle
+                                                        quora plaxo ideeli hulu weebly balihoo...
+                                                    </div>
+                                                    <div class="timeline-footer">
+                                                        <a class="btn btn-primary btn-sm">Read more</a>
+                                                        <a class="btn btn-danger btn-sm">Delete</a>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-user bg-green"></i>
+                                                <div class="timeline-item">
+                                                    <!-- <span class="time"><i class="fas fa-clock"></i> 5 mins ago</span> -->
+                                                    <h3 class="timeline-header no-border">
+                                                        <a>{{histo.nom_utilisateur}}</a>
+                                                    </h3>
+                                                </div>
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <!-- timeline item -->
+                                            <div>
+                                                <i class="fas fa-comments bg-yellow"></i>
+                                                <div class="timeline-item">
+                                                    <!-- <span class="time"><i class="fas fa-clock"></i> 27 mins ago</span> -->
+                                                    <h3 class="timeline-header"><a>{{histo.type_action}}</a></h3>
+                                                    <div class="timeline-body">
+                                                        {{histo.texte_sur_action}}
+                                                    </div>
+                                                    <div class="timeline-footer">
+                                                        <!-- <a class="btn btn-warning btn-sm">View comment</a> -->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- END timeline item -->
+                                            <div>
+                                                <i class="fas fa-clock bg-gray"></i>
+                                            </div>
                                         </div>
                                     </div>
-                                    <!-- /.card-header -->
-                                    <div class="card-body table-responsive p-0" style="height: 300px;">
-                                        <table class="table table-head-fixed text-nowrap">
-                                            <thead>
-                                                <tr>
-                                                    <th style="width: 1%">
-                                                        #
-                                                    </th>
-                                                    <th style="width: 20%">
-                                                        Nom Commercial
-                                                    </th>
-                                                    <th style="width: 15%">
-                                                        Catégorie
-                                                    </th>
-                                                    <th style="width: 15%">
-                                                        Forme
-                                                    </th>
-                                                    <th style="width: 15%">
-                                                        Dosage
-                                                    </th>
-                                                    <th style="width: 8%" class="text-center">
-                                                        Date d'entrée en stock
-                                                    </th>
-                                                    <!-- <th style="width: 20%" class="text-center">
-                                                        Actions
-                                                    </th> -->
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr *ngFor="let medoc of filteredData">
-                                                    <td>
-                                                        #
-                                                    </td>
-                                                    <td>
-                                                        <strong>
-                                                            {{medoc.nom_commercial}}
-                                                        </strong>
-                                                    </td>
-                                                    <td>
-                                                        {{medoc.categorie}}
-                                                    </td>
-                                                    <td>
-                                                        {{medoc.forme}}
-                                                    </td>
-                                                    <td>
-                                                        {{medoc.dosage}}
-                                                    </td>
-                                                    <!-- <td class="project_progress">
-                                                        <div class="progress progress-sm">
-                                                            <div class="progress-bar bg-green" role="progressbar"
-                                                                aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"
-                                                                [style.width.%]="medoc.quantite_dispo">
-                                                            </div>
-                                                        </div>
-                                                        <small>
-                                                            {{medoc.quantite_dispo}} en stock
-                                                        </small>
-                                                    </td> -->
-                                                    <!-- <td class="project-state">
-                                                        <strong>
-                                                            {{medoc.date_peremption}}
-                                                        </strong>
-                                                    </td> -->
-                                                    <td class="project-state">
-                                                        <strong>
-                                                            {{medoc.date_entree_stock | date: 'dd/MM/yyyy HH:mm'}}
-                                                        </strong>
-                                                    </td>
-                                                    <!-- <td class=" text-center">
-                                                        <button class="btn btn-primary btn-sm"
-                                                            (click)="viewMedicament(medoc)">
-                                                            <i class="fas fa-eye">
-                                                            </i> Voir plus
-                                                        </button>
-                                                    </td> -->
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <!-- /.card-body -->
                                 </div>
-                                <!-- /.card -->
+                                <!-- /.col -->
                             </div>
+
+                            <!-- Default box -->
+                            <div class="card" *ngIf="tableauView">
+                                <div class="card-header">
+                                    <h3 class="card-title">Historique de l'approvisionnement</h3>
+
+                                    <div class="card-tools">
+                                        <button type="button" class="btn btn-tool" data-card-widget="collapse"
+                                            title="Collapse">
+                                            <i class="fas fa-minus"></i>
+                                        </button>
+                                        <button type="button" class="btn btn-tool" data-card-widget="remove"
+                                            title="Remove">
+                                            <i class="fas fa-times"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="card-body p-0">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th style="width: 1%">
+                                                    #
+                                                </th>
+                                                <th style="width: 20%">
+                                                    Nom d'utilisateur
+                                                </th>
+                                                <th style="width: 15%">
+                                                    Type Action
+                                                </th>
+                                                <th style="width: 15%">
+                                                    Date Action
+                                                </th>
+                                                <th style="width: 15%">
+                                                    Texte Action
+                                                </th>
+                                                <th style="width: 20%" class="text-center">
+                                                    Actions
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let histo of filteredData">
+                                                <td>
+                                                    #
+                                                </td>
+                                                <td>
+                                                    <strong>
+                                                        {{histo.nom_utilisateur}}
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    {{histo.type_action}}
+                                                </td>
+                                                {{ histo.date_action | date: 'dd MMM. yyyy, HH:mm' }}
+
+                                                <!-- <td class="project_progress">
+                                                    <div class="progress progress-sm">
+                                                        <div class="progress-bar bg-green" role="progressbar"
+                                                            aria-valuenow="27" aria-valuemin="0" aria-valuemax="100"
+                                                            [style.width.%]="medoc.quantite_total">
+                                                        </div>
+                                                    </div>
+                                                    <small>
+                                                        {{histo.date_action}} en stock
+                                                    </small>
+                                                </td> -->
+                                                <td class="project-state">
+                                                    <strong>
+                                                        {{histo.texte_sur_action}}
+                                                    </strong>
+                                                </td>
+                                                <td class=" text-right">
+                                                    <!-- <button class="btn btn-info btn-sm"
+                                                        (click)="editMedicament(medoc.id!)">
+                                                        <i class="fas fa-pencil-alt">
+                                                        </i>
+
+                                                    </button> -->
+                                                    <button class="btn btn-danger btn-sm"
+                                                        >
+                                                        <i class="fas fa-print">
+                                                        </i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    <ng-template #noData>
+                                        <p>Aucune consultation trouvée.</p>
+                                    </ng-template>
+                                </div>
+                                <!-- /.card-body -->
+                            </div>
+                            <!-- /.card -->
                         </div>
+                        <!-- /.timeline -->
 
                     </section>
                     <!-- /.content -->

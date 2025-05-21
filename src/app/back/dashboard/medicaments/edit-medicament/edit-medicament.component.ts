@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
+import { AngularFireDatabase } from '@angular/fire/compat/database';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Consultations } from 'src/app/models/consultations/consultations';
 import { Approvisionnements } from 'src/app/models/medicaments/approvisionnements';
+import { HistoApprovisionnement } from 'src/app/models/medicaments/histo-approvisionnement';
 import { Medicaments } from 'src/app/models/medicaments/medicaments';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 import { AppromedocsService } from 'src/app/services/approvisionnements/appromedocs.service';
@@ -40,6 +42,7 @@ export class EditMedicamentComponent {
   constructor(
     private authService: AuthService,
     private router: Router,
+    private db: AngularFireDatabase,
     private route: ActivatedRoute,
     private realMedoc: MedicamentsService,
     private approMedoc: AppromedocsService,
@@ -73,6 +76,30 @@ export class EditMedicamentComponent {
         });
       }
     });
+    const user = this.route.snapshot.data['user'];
+    if (user && user.uid) {
+      this.userID = user.uid;
+      console.log("ID récupéré : " + this.userID);
+
+      this.currentUserData = this.authService.getFilteredUserById(this.userID);
+      if (this.currentUserData) {
+        this.currentUserData.subscribe(
+          data => {
+            if (data) {
+              console.log("Données utilisateur récupérées : ", data);
+              this.userData = data;
+            } else {
+              console.error("Aucune donnée utilisateur trouvée pour l'ID : " + this.userID);
+            }
+          },
+          error => {
+            console.error("Erreur lors de la récupération des données utilisateur : ", error);
+          }
+        );
+      }
+    } else {
+      console.error("L'utilisateur ou l'ID est null.");
+    }
 
   }
 
@@ -96,6 +123,19 @@ export class EditMedicamentComponent {
       this.approMedoc.updateMedicament(this.id, updatedMedicaments)
         .then(() => {
           console.log('Produit mis à jour avec succès');
+          const histoAppro: HistoApprovisionnement = {
+            nom_utilisateur: this.userData?.nom + " " + this.userData?.prenom,
+            date_action: new Date().toISOString(),
+            type_action: "Re-approvisionnement",
+            texte_sur_action: "Mise à jour du produit " + this.medocForm.value.nom_produit + ", Dosage : " + this.medocForm.value.dosage + ", Quantité : " + this.medocForm.value.quantite_total
+          }
+          this.db.list('histo-approvisionnement').push(histoAppro)
+            .then(() => {
+              console.log("Historique enregistré avec succès");
+            })
+            .catch(err => {
+              console.error("❌ Erreur lors de l'ajout :", err);
+            })
           this.router.navigate(['/dashboard/medicaments/list-medicament']);
         })
         .catch(err => {

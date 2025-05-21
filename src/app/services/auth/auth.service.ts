@@ -4,7 +4,7 @@ import { AngularFireDatabase, AngularFireList } from '@angular/fire/compat/datab
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { map, Observable, switchMap, tap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { Inscription } from 'src/app/models/auth/inscription';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 
@@ -273,6 +273,40 @@ export class AuthService {
       })
     );
   }
+
+  // Récupère le typeCompte (rôle) de l'utilisateur connecté
+  getUserRole(): Observable<string | null> {
+    return this.auth.authState.pipe(
+      switchMap(user => {
+        if (!user) return of(null);
+
+        // Recherche par l'id unique Firebase (stocké dans "id")
+        return this.db.list('/utilisateurs', ref =>
+          ref.orderByChild('id').equalTo(user.uid)
+        ).valueChanges().pipe(
+          map(users => {
+            const userData: any = users[0];
+            return userData?.typeCompte || null;
+          })
+        );
+      })
+    );
+  }
+
+  // Vérifie si l'utilisateur a un rôle spécifique
+  isRole(role: string): Observable<boolean> {
+    return this.getUserRole().pipe(
+      map(userRole => userRole === role)
+    );
+  }
+
+  // Vérifie si l'utilisateur a un rôle parmi une liste autorisée
+  hasAccess(allowedRoles: string[]): Observable<boolean> {
+    return this.getUserRole().pipe(
+      map(userRole => allowedRoles.includes(userRole || ''))
+    );
+  }
+
 
   //Recuperer les information de l'utilisateur connecté
   // getConnectedUsers(){

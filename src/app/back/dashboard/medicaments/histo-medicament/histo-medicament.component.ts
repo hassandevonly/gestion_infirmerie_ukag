@@ -1,9 +1,11 @@
 import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { HistoApprovisionnement } from 'src/app/models/medicaments/histo-approvisionnement';
 import { Medicaments } from 'src/app/models/medicaments/medicaments';
 import { Utilisateurs } from 'src/app/models/utilisateurs/utilisateurs';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { HistoApprovisionnementsService } from 'src/app/services/histo-approvisionnements/histo-approvisionnements.service';
 import { MedicamentsService } from 'src/app/services/medicaments/medicaments.service';
 
 @Component({
@@ -12,8 +14,9 @@ import { MedicamentsService } from 'src/app/services/medicaments/medicaments.ser
   styleUrls: ['./histo-medicament.component.scss']
 })
 export class HistoMedicamentComponent {
-  realtimeData: Medicaments[] = [];
-  filteredData: Medicaments[] = [];
+  realtimeData: HistoApprovisionnement[] = [];
+  filteredData: HistoApprovisionnement[] = [];
+  approRealtimeData: HistoApprovisionnement[] = []
   searchTerm: string = '';
   totalData = 0
   consultations: Medicaments[] = [];
@@ -23,10 +26,13 @@ export class HistoMedicamentComponent {
   medecinViewMenu: boolean = false
   logistiqueViewMenu: boolean = false
   gestionnaireViewMenu: boolean = false
+  timelinedView : boolean = true
+  tableauView : boolean = false
 
   constructor(
     private realMedicament: MedicamentsService,
     private router: Router,
+    private approMedocs: HistoApprovisionnementsService,
     private route: ActivatedRoute,
     private authService: AuthService
   ) {
@@ -71,15 +77,49 @@ export class HistoMedicamentComponent {
     }
   }
 
+  ngOnInit(): void {
+    this.getHistoAppro()
+  }
+
+  timelineView(){
+    this.tableauView =false
+    this.timelinedView = true
+  }
+
+  tableView(){
+    this.timelinedView = false
+    this.tableauView = true
+    
+  }
+
+
+
+
+
+  getHistoAppro() {
+    this.approMedocs.getHistoApprovisionnement().subscribe({
+      next: (data) => {
+        console.log("Data reçue: ", data);
+        this.approRealtimeData = data.sort((a, b) => a.nom_utilisateur.localeCompare(b.nom_utilisateur)); // Sort alphabetically
+        this.filteredData = [...this.approRealtimeData];
+        this.totalData = data.length;
+        console.log("Nombre total de données: ", this.totalData);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des medicaments:', err);
+      }
+    });
+  }
+
   filterMedicaments(): void {
     const term = this.searchTerm.toLowerCase();
     this.filteredData = this.realtimeData
       .filter(medoc =>
-        (medoc.nom_commercial?.toLowerCase().includes(term) || '') ||
-        (medoc.categorie ?? '').toLowerCase().includes(term) ||
-        (medoc.forme ?? '').toLowerCase().includes(term)
+        (medoc.nom_utilisateur?.toLowerCase().includes(term) || '') ||
+        (medoc.type_action ?? '').toLowerCase().includes(term) ||
+        (medoc.texte_sur_action ?? '').toLowerCase().includes(term)
       )
-      .sort((a, b) => (a.nom_commercial ?? '').localeCompare(b.nom_commercial ?? '')); // Sort alphabetically
+      .sort((a, b) => (a.nom_utilisateur ?? '').localeCompare(b.nom_utilisateur ?? '')); // Sort alphabetically
   }
 
 
